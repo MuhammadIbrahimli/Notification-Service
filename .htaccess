@@ -1,0 +1,21 @@
+# Перенаправление всех запросов в папку public
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Перенаправляем все запросы в папку public
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [L]
+    
+    # Защита от доступа к важным папкам
+    RewriteRule ^vendor/ - [F,L]
+    RewriteRule ^src/ - [F,L]
+    RewriteRule ^config/ - [F,L]
+</IfModule>
+
+# Защита от доступа к важным файлам
+<FilesMatch "^(\.env|composer\.(json|lock)|README\.md|LICENSE)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

@@ -72,7 +72,7 @@ DB_PASSWORD=notification_password
 ### 3. Выполнение миграций
 
 ```bash
-docker-compose exec app composer migrate
+docker-compose exec apache composer migrate
 ```
 
 Сервис будет доступен по адресу: **http://localhost:8080**

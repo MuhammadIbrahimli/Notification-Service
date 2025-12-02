@@ -29,4 +29,3 @@ $router->get('/health', [$controller, 'health']);
 // Обработка запроса
 $request = new Request();
 $router->dispatch($request);
-

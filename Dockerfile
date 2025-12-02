@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-apache
 
 # Установка системных зависимостей
 RUN apt-get update && apt-get install -y \
@@ -18,6 +18,9 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl zip
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Включение mod_rewrite для Apache
+RUN a2enmod rewrite headers
+
 # Установка рабочей директории
 WORKDIR /var/www/html
 
@@ -35,7 +38,6 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN mkdir -p storage/logs storage/queue \
     && chown -R www-data:www-data storage
 
-EXPOSE 9000
+EXPOSE 80
 
-CMD ["php-fpm"]
-
+CMD ["apache2-foreground"]

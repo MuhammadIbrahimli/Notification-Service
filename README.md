@@ -132,7 +132,7 @@ docker-compose up -d
 2. **Выполнение миграций:**
 
 ```bash
-docker-compose exec app composer migrate
+docker-compose exec apache composer migrate
 ```
 
 3. **Проверка статуса:**
@@ -145,7 +145,7 @@ docker-compose ps
 
 ```bash
 docker-compose logs -f worker
-docker-compose logs -f app
+docker-compose logs -f apache
 ```
 
 5. **Остановка:**
