@@ -1,5 +1,5 @@
 -- Create database if not exists (optional, uncomment if needed)
--- CREATE DATABASE IF NOT EXISTS notification_service CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- CREATE DATABASE IF NOT EXISTS notification_service CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 -- USE notification_service;
 
 -- Table for notification requests
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS notification_requests (
     INDEX idx_status (status),
     INDEX idx_channel (channel),
     INDEX idx_created_at (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table for notification logs
 CREATE TABLE IF NOT EXISTS notification_logs (
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS notification_logs (
     INDEX idx_request_id (request_id),
     INDEX idx_success (success),
     INDEX idx_created_at (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Table for queue
 CREATE TABLE IF NOT EXISTS queue (
@@ -40,5 +40,5 @@ CREATE TABLE IF NOT EXISTS queue (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_status (status),
     INDEX idx_created_at (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
