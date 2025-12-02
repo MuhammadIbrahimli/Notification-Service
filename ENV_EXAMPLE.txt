@@ -1,0 +1,32 @@
+# Application
+APP_DEBUG=false
+APP_ENV=production
+
+# Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=notification_service
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Email Driver
+EMAIL_SMTP_HOST=smtp.example.com
+EMAIL_SMTP_PORT=587
+EMAIL_SMTP_USER=
+EMAIL_SMTP_PASS=
+EMAIL_FROM=noreply@example.com
+EMAIL_FROM_NAME=Notification Center
+
+# SMS Driver
+SMS_API_URL=
+SMS_API_KEY=
+SMS_SENDER=Notification
+
+# Telegram Driver
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_API_URL=https://api.telegram.org/bot
+
+# Webhook Driver
+WEBHOOK_TIMEOUT=10
+WEBHOOK_RETRY_COUNT=3
+

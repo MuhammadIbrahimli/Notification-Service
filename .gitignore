@@ -1,0 +1,14 @@
+/vendor/
+/node_modules/
+*.log
+.env
+.env.local
+/storage/
+/public/storage/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+

@@ -1,0 +1,26 @@
+{
+    "name": "notification-service/notification-center",
+    "description": "Notification Center - модульный сервис для отправки уведомлений через различные каналы",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "NotificationService\\": "src/"
+        }
+    },
+    "scripts": {
+        "migrate": "php -r \"require 'vendor/autoload.php'; \\NotificationService\\Database\\DB::migrate();\"",
+        "worker": "php src/Queue/Worker.php"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
+
