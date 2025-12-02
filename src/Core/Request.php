@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace NotificationService\Core;
 
-class Request
-{
+class Request {
     private array $queryParams = [];
     private array $bodyParams = [];
     private array $headers = [];
@@ -13,71 +12,68 @@ class Request
     private string $uri = '';
     private string $path = '';
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $this->uri = $_SERVER['REQUEST_URI'] ?? '/';
         $this->path = parse_url($this->uri, PHP_URL_PATH) ?? '/';
+
+        // Нормализация пути: убираем /public/ из начала, если DocumentRoot на корне проекта
+        if (strpos($this->path, '/public/') === 0) {
+            $this->path = substr($this->path, 7);
+        }
+        if ($this->path === '/public') {
+            $this->path = '/';
+        }
+
         $this->queryParams = $_GET ?? [];
         $this->headers = $this->parseHeaders();
         $this->bodyParams = $this->parseBody();
     }
 
-    public function getMethod(): string
-    {
+    public function getMethod(): string {
         return $this->method;
     }
 
-    public function getUri(): string
-    {
+    public function getUri(): string {
         return $this->uri;
     }
 
-    public function getPath(): string
-    {
+    public function getPath(): string {
         return $this->path;
     }
 
-    public function get(string $key, mixed $default = null): mixed
-    {
+    public function get(string $key, mixed $default = null): mixed {
         return $this->queryParams[$key] ?? $default;
     }
 
-    public function post(string $key, mixed $default = null): mixed
-    {
+    public function post(string $key, mixed $default = null): mixed {
         return $this->bodyParams[$key] ?? $default;
     }
 
-    public function input(string $key, mixed $default = null): mixed
-    {
+    public function input(string $key, mixed $default = null): mixed {
         return $this->bodyParams[$key] ?? $this->queryParams[$key] ?? $default;
     }
 
-    public function all(): array
-    {
+    public function all(): array {
         return array_merge($this->queryParams, $this->bodyParams);
     }
 
-    public function has(string $key): bool
-    {
+    public function has(string $key): bool {
         return isset($this->queryParams[$key]) || isset($this->bodyParams[$key]);
     }
 
-    public function header(string $key, ?string $default = null): ?string
-    {
+    public function header(string $key, ?string $default = null): ?string {
         $key = strtolower($key);
         return $this->headers[$key] ?? $default;
     }
 
-    public function headers(): array
-    {
+    public function headers(): array {
         return $this->headers;
     }
 
-    private function parseHeaders(): array
-    {
+    private function parseHeaders(): array {
         $headers = [];
-        
+
         if (function_exists('getallheaders')) {
             $allHeaders = getallheaders();
             if ($allHeaders !== false) {
@@ -97,16 +93,15 @@ class Request
         return $headers;
     }
 
-    private function parseBody(): array
-    {
+    private function parseBody(): array {
         $body = file_get_contents('php://input');
-        
+
         if (empty($body)) {
             return $_POST ?? [];
         }
 
         $contentType = $this->header('content-type', '');
-        
+
         if (strpos($contentType, 'application/json') !== false) {
             $decoded = json_decode($body, true);
             return is_array($decoded) ? $decoded : [];
@@ -120,4 +115,3 @@ class Request
         return [];
     }
 }
-
