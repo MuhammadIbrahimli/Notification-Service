@@ -32,7 +32,7 @@ class Response {
         $this->send();
     }
 
-    public function text(string $text, int $statusCode = null): void {
+    public function text(string $text, ?int $statusCode = null): void {
         if ($statusCode !== null) {
             $this->statusCode = $statusCode;
         }
@@ -42,7 +42,7 @@ class Response {
         $this->send();
     }
 
-    public function html(string $html, int $statusCode = null): void {
+    public function html(string $html, ?int $statusCode = null): void {
         if ($statusCode !== null) {
             $this->statusCode = $statusCode;
         }
