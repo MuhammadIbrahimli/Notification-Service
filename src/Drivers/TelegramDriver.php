@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace NotificationService\Drivers;
 
-class TelegramDriver implements NotificationDriverInterface
-{
+class TelegramDriver implements NotificationDriverInterface {
     private array $config;
     private const MAX_RETRIES = 3;
     private const RETRY_DELAY = 1; // секунды
 
-    public function __construct(array $config)
-    {
+    public function __construct(array $config) {
         $this->config = $config;
     }
 
-    public function send(array $payload): NotificationResult
-    {
+    public function send(array $payload): NotificationResult {
         $chatId = $payload['to'] ?? null;
         $message = $payload['message'] ?? '';
         $parseMode = $payload['parse_mode'] ?? 'HTML';
@@ -35,17 +32,22 @@ class TelegramDriver implements NotificationDriverInterface
             );
         }
 
-        $botToken = $this->config['bot_token'] ?? '';
+        $botToken = trim($this->config['bot_token'] ?? '');
         $apiUrl = $this->config['api_url'] ?? 'https://api.telegram.org/bot';
 
         if (empty($botToken)) {
             return new NotificationResult(
                 false,
-                'Telegram bot token is not configured'
+                'Telegram bot token is not configured. Please set TELEGRAM_BOT_TOKEN in .env file'
             );
         }
 
-        $url = rtrim($apiUrl, '/') . '/' . $botToken . '/sendMessage';
+        // Формируем правильный URL для Telegram API
+        $baseUrl = rtrim($apiUrl, '/');
+        if (substr($baseUrl, -4) !== '/bot') {
+            $baseUrl = rtrim($baseUrl, '/') . '/bot';
+        }
+        $url = $baseUrl . $botToken . '/sendMessage';
 
         $requestData = [
             'chat_id' => $chatId,
@@ -59,6 +61,7 @@ class TelegramDriver implements NotificationDriverInterface
 
         $lastError = null;
         $lastStatusCode = null;
+        $lastResponse = null;
 
         for ($attempt = 1; $attempt <= self::MAX_RETRIES; $attempt++) {
             $result = $this->attemptSend($url, $requestData);
@@ -74,6 +77,7 @@ class TelegramDriver implements NotificationDriverInterface
 
             $lastError = $result['error'];
             $lastStatusCode = $result['status_code'];
+            $lastResponse = $result['response']; // Сохраняем ответ от Telegram API для отладки
 
             if ($attempt < self::MAX_RETRIES) {
                 sleep(self::RETRY_DELAY * $attempt);
@@ -83,13 +87,12 @@ class TelegramDriver implements NotificationDriverInterface
         return new NotificationResult(
             false,
             'Failed to send Telegram message after ' . self::MAX_RETRIES . ' attempts: ' . $lastError,
-            null,
+            $lastResponse,
             $lastStatusCode ?? 500
         );
     }
 
-    private function attemptSend(string $url, array $data): array
-    {
+    private function attemptSend(string $url, array $data): array {
         $ch = curl_init();
 
         curl_setopt_array($ch, [
@@ -102,6 +105,8 @@ class TelegramDriver implements NotificationDriverInterface
             ],
             CURLOPT_TIMEOUT => 10,
             CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
         ]);
 
         $response = curl_exec($ch);
@@ -130,7 +135,21 @@ class TelegramDriver implements NotificationDriverInterface
             ];
         }
 
-        $errorMessage = $decoded['description'] ?? $response ?? 'Unknown error';
+        // Улучшенная обработка ошибок от Telegram API
+        $errorMessage = 'Unknown error';
+
+        if ($decoded && isset($decoded['description'])) {
+            $errorMessage = $decoded['description'];
+        } elseif ($decoded && isset($decoded['error_code'])) {
+            $errorMessage = "Error code: " . $decoded['error_code'];
+            if (isset($decoded['description'])) {
+                $errorMessage .= " - " . $decoded['description'];
+            }
+        } elseif ($httpCode === 404) {
+            $errorMessage = "Not Found - Check if bot token is correct and URL is valid. URL: " . substr($url, 0, 50) . "...";
+        } elseif ($response) {
+            $errorMessage = $response;
+        }
 
         return [
             'success' => false,
@@ -140,4 +159,3 @@ class TelegramDriver implements NotificationDriverInterface
         ];
     }
 }
-
