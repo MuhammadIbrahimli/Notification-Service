@@ -11,4 +11,4 @@
 *.swo
 *~
 .DS_Store
-.osp
+.osp/
