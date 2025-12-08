@@ -1,16 +1,16 @@
-# 🚀 Быстрый старт
+# 🚀 Quick Start
 
-## Локальная установка
+## Local Installation
 
-### 1. Установка зависимостей
+### 1. Install Dependencies
 
 ```bash
 composer install
 ```
 
-### 2. Настройка окружения
+### 2. Environment Setup
 
-Скопируйте `ENV_EXAMPLE.txt` в `.env` и заполните необходимые параметры:
+Copy `ENV_EXAMPLE.txt` to `.env` and fill in the necessary parameters:
 
 ```bash
 # Windows
@@ -20,7 +20,7 @@ copy ENV_EXAMPLE.txt .env
 cp ENV_EXAMPLE.txt .env
 ```
 
-Минимальные настройки для старта:
+Minimum settings for start:
 
 ```env
 DB_HOST=localhost
@@ -29,39 +29,39 @@ DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
 
-### 3. Создание базы данных
+### 3. Create Database
 
 ```sql
 CREATE DATABASE notification_service CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### 4. Запуск миграций
+### 4. Run Migrations
 
 ```bash
 composer migrate
 ```
 
-### 5. Запуск сервера
+### 5. Start Server
 
 ```bash
 php -S localhost:8000 -t public
 ```
 
-### 6. Запуск воркера (в отдельном терминале)
+### 6. Start Worker (in a separate terminal)
 
 ```bash
 php src/Queue/Worker.php
 ```
 
-## Docker установка
+## Docker Installation
 
-### 1. Запуск всех сервисов
+### 1. Start All Services
 
 ```bash
 docker-compose up -d
 ```
 
-### 2. Настройка .env для Docker
+### 2. Configure .env for Docker
 
 ```env
 DB_HOST=db
@@ -69,23 +69,23 @@ DB_USERNAME=notification_user
 DB_PASSWORD=notification_password
 ```
 
-### 3. Выполнение миграций
+### 3. Run Migrations
 
 ```bash
 docker-compose exec apache composer migrate
 ```
 
-Сервис будет доступен по адресу: **http://localhost:8080**
+The service will be available at: **http://localhost:8080**
 
-## Тестирование
+## Testing
 
-### Проверка health check
+### Health Check
 
 ```bash
 curl http://localhost:8000/health
 ```
 
-### Отправка тестового уведомления
+### Send Test Notification
 
 ```bash
 curl -X POST http://localhost:8000/send \
@@ -97,27 +97,27 @@ curl -X POST http://localhost:8000/send \
   }'
 ```
 
-### Проверка статуса
+### Check Status
 
 ```bash
 curl http://localhost:8000/status/1
 ```
 
-## Настройка Telegram бота
+## Telegram Bot Setup
 
-1. Создайте бота через [@BotFather](https://t.me/BotFather)
-2. Получите токен
-3. Добавьте в `.env`:
+1. Create a bot via [@BotFather](https://t.me/BotFather)
+2. Get the token
+3. Add to `.env`:
 
 ```env
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 ```
 
-4. Получите свой chat_id (отправьте боту сообщение и проверьте через API)
+4. Get your chat_id (send a message to the bot and check via API)
 
-## Настройка Email
+## Email Setup
 
-Для отправки email через SMTP добавьте в `.env`:
+To send email via SMTP, add to `.env`:
 
 ```env
 EMAIL_SMTP_HOST=smtp.gmail.com
@@ -128,9 +128,9 @@ EMAIL_FROM=your_email@gmail.com
 EMAIL_FROM_NAME=Notification Center
 ```
 
-## Настройка SMS
+## SMS Setup
 
-Для отправки SMS добавьте в `.env`:
+To send SMS, add to `.env`:
 
 ```env
 SMS_API_URL=https://api.sms-provider.com/send
@@ -138,7 +138,7 @@ SMS_API_KEY=your_api_key
 SMS_SENDER=YourCompany
 ```
 
-## Структура запроса
+## Request Structure
 
 ```json
 {
@@ -152,10 +152,10 @@ SMS_SENDER=YourCompany
 }
 ```
 
-## Следующие шаги
+## Next Steps
 
-- Прочитайте полную документацию в [README.md](README.md)
-- Настройте все необходимые драйверы
-- Добавьте свой кастомный драйвер (см. README.md)
-- Настройте мониторинг и логирование
+- Read the full documentation in [README.md](README.md)
+- Configure all necessary drivers
+- Add your custom driver (see README.md)
+- Configure monitoring and logging
 

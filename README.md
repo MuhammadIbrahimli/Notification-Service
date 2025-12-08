@@ -1,119 +1,119 @@
 # Notification Center
 
-Модульный сервис для отправки уведомлений через различные каналы связи на чистом PHP 8.2+ без фреймворков.
+Modular service for sending notifications via various communication channels in pure PHP 8.2+ without frameworks.
 
-## 📋 Описание
+## 📋 Description
 
-Notification Center — это production-ready сервис, который принимает HTTP-запросы и отправляет уведомления через разные каналы:
-- 📧 **Email** — через SMTP или функцию mail()
-- 📱 **SMS** — через REST API провайдеров
-- 💬 **Telegram** — через Bot API
-- 🔗 **Webhook** — отправка на произвольные HTTP endpoints
+Notification Center is a production-ready service that accepts HTTP requests and sends notifications through different channels:
+- 📧 **Email** — via SMTP or mail() function
+- 📱 **SMS** — via providers' REST API
+- 💬 **Telegram** — via Bot API
+- 🔗 **Webhook** — sending to arbitrary HTTP endpoints
 
-## ✨ Особенности
+## ✨ Features
 
-- ✅ Модульная архитектура с разделением ответственности (SRP)
-- ✅ Очередь задач для асинхронной обработки
-- ✅ Retry-механизм для всех драйверов (3 попытки)
-- ✅ Логирование всех операций
-- ✅ Расширяемая система драйверов
-- ✅ Полная типизация с `declare(strict_types=1)`
-- ✅ Docker-окружение для разработки и продакшена
+- ✅ Modular architecture with separation of concerns (SRP)
+- ✅ Task queue for asynchronous processing
+- ✅ Retry mechanism for all drivers (3 attempts)
+- ✅ Logging of all operations
+- ✅ Extensible driver system
+- ✅ Full typing with `declare(strict_types=1)`
+- ✅ Docker environment for development and production
 - ✅ RESTful API
 
-## 🏗️ Архитектура
+## 🏗️ Architecture
 
 ```
 Request → Router → Controller → NotificationService → DriverManager → Drivers
 ```
 
-Каждый драйвер реализует интерфейс `NotificationDriverInterface` и может быть легко расширен.
+Each driver implements the `NotificationDriverInterface` and can be easily extended.
 
-## 📁 Структура проекта
+## 📁 Project Structure
 
 ```
 project/
-├── public/              # Точка входа
+├── public/              # Entry point
 │   └── index.php
 ├── src/
-│   ├── Controllers/     # Контроллеры
-│   ├── Services/        # Бизнес-логика
-│   ├── Drivers/         # Драйверы уведомлений
-│   ├── Core/            # Ядро (Router, Request, Response)
-│   ├── Models/          # Модели данных
-│   ├── Queue/           # Система очередей
-│   └── Database/        # Работа с БД
-├── config/              # Конфигурационные файлы
-├── storage/             # Логи и файлы
-└── docker/              # Docker конфигурация
+│   ├── Controllers/     # Controllers
+│   ├── Services/        # Business logic
+│   ├── Drivers/         # Notification drivers
+│   ├── Core/            # Core (Router, Request, Response)
+│   ├── Models/          # Data models
+│   ├── Queue/           # Queue system
+│   └── Database/        # Database operations
+├── config/              # Configuration files
+├── storage/             # Logs and files
+└── docker/              # Docker configuration
 ```
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### Требования
+### Requirements
 
 - PHP 8.2+
 - Composer
-- MySQL 5.7+ или 8.0+
-- Docker и Docker Compose (опционально)
+- MySQL 5.7+ or 8.0+
+- Docker and Docker Compose (optional)
 
-### Установка
+### Installation
 
-1. **Клонирование репозитория:**
+1. **Clone the repository:**
 
 ```bash
 git clone <repository-url>
 cd notification-service
 ```
 
-2. **Установка зависимостей:**
+2. **Install dependencies:**
 
 ```bash
 composer install
 ```
 
-3. **Настройка окружения:**
+3. **Environment setup:**
 
-Создайте файл `.env` на основе `.env.example`:
+Create a `.env` file based on `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
-Отредактируйте `.env` и укажите параметры подключения к БД и настройки драйверов.
+Edit `.env` and specify database connection parameters and driver settings.
 
-4. **Создание базы данных:**
+4. **Create database:**
 
 ```bash
-# Создайте БД вручную или используйте миграции
+# Create DB manually or use migrations
 mysql -u root -p -e "CREATE DATABASE notification_service CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 ```
 
-5. **Выполнение миграций:**
+5. **Run migrations:**
 
 ```bash
 composer migrate
 ```
 
-Или вручную:
+Or manually:
 
 ```bash
 php -r "require 'vendor/autoload.php'; \NotificationService\Database\DB::migrate();"
 ```
 
-6. **Запуск встроенного сервера PHP:**
+6. **Start built-in PHP server:**
 
 ```bash
 php -S localhost:8000 -t public
 ```
 
-7. **Запуск воркера очереди (в отдельном терминале):**
+7. **Start queue worker (in a separate terminal):**
 
 ```bash
 php src/Queue/Worker.php
 ```
 
-Или через composer:
+Or via composer:
 
 ```bash
 composer worker
@@ -121,44 +121,44 @@ composer worker
 
 ## 🐳 Docker
 
-### Запуск через Docker Compose
+### Run via Docker Compose
 
-1. **Запуск всех сервисов:**
+1. **Start all services:**
 
 ```bash
 docker-compose up -d
 ```
 
-2. **Выполнение миграций:**
+2. **Run migrations:**
 
 ```bash
 docker-compose exec apache composer migrate
 ```
 
-3. **Проверка статуса:**
+3. **Check status:**
 
 ```bash
 docker-compose ps
 ```
 
-4. **Просмотр логов:**
+4. **View logs:**
 
 ```bash
 docker-compose logs -f worker
 docker-compose logs -f apache
 ```
 
-5. **Остановка:**
+5. **Stop:**
 
 ```bash
 docker-compose down
 ```
 
-Сервис будет доступен по адресу: `http://localhost:8080`
+The service will be available at: `http://localhost:8080`
 
 ## 📡 API Endpoints
 
-### 1. Отправка уведомления
+### 1. Send notification
 
 **POST** `/send`
 
@@ -183,7 +183,7 @@ docker-compose down
 }
 ```
 
-### 2. Получение статуса уведомления
+### 2. Get notification status
 
 **GET** `/status/{id}`
 
@@ -203,7 +203,7 @@ docker-compose down
 }
 ```
 
-### 3. Получение логов уведомления
+### 3. Get notification logs
 
 **GET** `/logs/{id}`
 
@@ -241,7 +241,7 @@ docker-compose down
 }
 ```
 
-## 🔌 Поддерживаемые каналы
+## 🔌 Supported Channels
 
 ### Email
 
@@ -299,24 +299,24 @@ docker-compose down
 }
 ```
 
-## ⚙️ Конфигурация
+## ⚙️ Configuration
 
-Настройки драйверов находятся в файле `config/drivers.php`. Переменные окружения настраиваются в `.env`:
+Driver settings are located in `config/drivers.php`. Environment variables are configured in `.env`:
 
-- `EMAIL_SMTP_HOST` — SMTP сервер
-- `EMAIL_SMTP_PORT` — SMTP порт
-- `EMAIL_SMTP_USER` — SMTP пользователь
-- `EMAIL_SMTP_PASS` — SMTP пароль
-- `SMS_API_URL` — URL API для SMS
-- `SMS_API_KEY` — API ключ для SMS
-- `TELEGRAM_BOT_TOKEN` — токен Telegram бота
-- `WEBHOOK_TIMEOUT` — таймаут для webhook запросов
+- `EMAIL_SMTP_HOST` — SMTP server
+- `EMAIL_SMTP_PORT` — SMTP port
+- `EMAIL_SMTP_USER` — SMTP user
+- `EMAIL_SMTP_PASS` — SMTP password
+- `SMS_API_URL` — API URL for SMS
+- `SMS_API_KEY` — API key for SMS
+- `TELEGRAM_BOT_TOKEN` — Telegram bot token
+- `WEBHOOK_TIMEOUT` — Timeout for webhook requests
 
-## 🔧 Разработка
+## 🔧 Development
 
-### Добавление нового драйвера
+### Adding a new driver
 
-1. Создайте класс драйвера, реализующий `NotificationDriverInterface`:
+1. Create a driver class implementing `NotificationDriverInterface`:
 
 ```php
 <?php
@@ -329,88 +329,88 @@ class CustomDriver implements NotificationDriverInterface
 {
     public function send(array $payload): NotificationResult
     {
-        // Ваша логика отправки
+        // Your sending logic
         return new NotificationResult(true, 'Success');
     }
 }
 ```
 
-2. Добавьте конфигурацию в `config/drivers.php`:
+2. Add configuration to `config/drivers.php`:
 
 ```php
 'custom' => [
     'driver' => \NotificationService\Drivers\CustomDriver::class,
     'config' => [
-        // Ваши настройки
+        // Your settings
     ],
 ],
 ```
 
-3. Готово! Теперь можно использовать канал `custom`.
+3. Done! Now you can use the `custom` channel.
 
-### Структура очереди
+### Queue Structure
 
-Задачи в очереди имеют следующую структуру:
+Tasks in the queue have the following structure:
 
-- `id` — уникальный идентификатор задачи
-- `payload` — данные задачи (JSON)
-- `status` — статус (pending, processing, completed, failed)
-- `attempts` — количество попыток
-- `created_at` — время создания
+- `id` — unique task identifier
+- `payload` — task data (JSON)
+- `status` — status (pending, processing, completed, failed)
+- `attempts` — number of attempts
+- `created_at` — creation time
 
-## 📝 Логирование
+## 📝 Logging
 
-Логи сохраняются в директории `storage/logs/`:
+Logs are saved in the `storage/logs/` directory:
 
-- `error-YYYY-MM-DD.log` — ошибки приложения
-- Логи БД можно посмотреть через Docker: `docker-compose logs db`
+- `error-YYYY-MM-DD.log` — application errors
+- DB logs can be viewed via Docker: `docker-compose logs db`
 
-## 🧪 Тестирование
+## 🧪 Testing
 
-Примеры тестовых запросов через cURL:
+Examples of test requests via cURL:
 
 ```bash
-# Отправка уведомления
+# Send notification
 curl -X POST http://localhost:8000/send \
   -H "Content-Type: application/json" \
   -d '{
     "channel": "telegram",
     "to": "123456789",
     "message": "Test notification"
-  }'
+      }'
 
-# Проверка статуса
+# Check status
 curl http://localhost:8000/status/1
 
-# Получение логов
+# Get logs
 curl http://localhost:8000/logs/1
 
 # Health check
 curl http://localhost:8000/health
 ```
 
-## 🔒 Безопасность
+## 🔒 Security
 
-- Все SQL-запросы используют подготовленные запросы (prepared statements)
-- Валидация всех входных данных
-- Обработка исключений на всех уровнях
-- Логирование ошибок без раскрытия чувствительной информации
+- All SQL queries use prepared statements
+- Validation of all input data
+- Exception handling at all levels
+- Error logging without revealing sensitive information
 
-## 📄 Лицензия
+## 📄 License
 
-Этот проект создан в учебных целях.
+This project was created for educational purposes.
 
-## 👥 Автор
+## 👥 Author
 
 Muhammad Ibrahimli
 
-## 🤝 Вклад
+## 🤝 Contribution
 
-Приветствуются предложения и pull requests!
+Suggestions and pull requests are welcome!
 
 ---
 
-**Версия:** 1.0.0  
+**Version:** 1.0.0  
 **PHP:** 8.2+  
-**Статус:** Production Ready
+**Status:** Production Ready
 
